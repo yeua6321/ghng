@@ -55,6 +55,12 @@ COPY app/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001 -G nodejs
 
+# 复制启动脚本（在切换用户之前）
+COPY entrypoint.sh /app/entrypoint.sh
+
+# 设置启动脚本权限
+RUN chmod +x /app/entrypoint.sh
+
 # 更改文件所有权
 RUN chown -R nodejs:nodejs /app
 
@@ -67,15 +73,6 @@ EXPOSE 3000
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3000/ || exit 1
-
-# 复制启动脚本
-COPY entrypoint.sh /app/entrypoint.sh
-
-# 在切换用户前设置权限
-RUN chmod +x /app/entrypoint.sh
-
-# 切换到非 root 用户
-USER nodejs
 
 # 启动应用
 ENTRYPOINT ["/app/entrypoint.sh"]
