@@ -11,9 +11,8 @@ RUN npm ci --omit=dev
 # 复制源代码
 COPY app/xy/ ./
 
-# 明确复制 start.sh 文件并设置权限
-RUN cp start.sh /app/start.sh && \
-    chmod +x /app/start.sh && \
+# 设置 start.sh 文件权限
+RUN chmod +x /app/start.sh && \
     ls -la /app/start.sh
 
 ############################################################
