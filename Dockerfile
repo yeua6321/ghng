@@ -52,8 +52,8 @@ RUN mkdir -p /app/tmp && chmod 777 /app/tmp
 COPY app/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # 创建非 root 用户
-RUN addgroup -g 1000 -S nodejs && \
-    adduser -S nodejs -u 1000
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 -G nodejs
 
 # 更改文件所有权
 RUN chown -R nodejs:nodejs /app
