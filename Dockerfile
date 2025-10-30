@@ -70,7 +70,12 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # 复制启动脚本
 COPY entrypoint.sh /app/entrypoint.sh
+
+# 在切换用户前设置权限
 RUN chmod +x /app/entrypoint.sh
+
+# 切换到非 root 用户
+USER nodejs
 
 # 启动应用
 ENTRYPOINT ["/app/entrypoint.sh"]
