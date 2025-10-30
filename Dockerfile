@@ -11,8 +11,10 @@ RUN npm ci --omit=dev
 # 复制源代码
 COPY app/xy/ ./
 
-# 设置权限
-RUN chmod +x start.sh
+# 明确复制 start.sh 文件并设置权限
+RUN cp start.sh /app/start.sh && \
+    chmod +x /app/start.sh && \
+    ls -la /app/start.sh
 
 ############################################################
 
@@ -44,6 +46,12 @@ WORKDIR /app
 
 # 从构建阶段复制文件
 COPY --from=builder /app ./
+
+# 确保 start.sh 文件存在并设置权限
+RUN test -f /app/start.sh || (echo "start.sh not found, copying manually" && exit 1) && \
+    chmod +x /app/start.sh && \
+    ls -la /app/start.sh && \
+    echo "start.sh is ready"
 
 # 创建临时目录
 RUN mkdir -p /app/tmp && chmod 777 /app/tmp
