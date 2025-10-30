@@ -12,13 +12,9 @@ export FILE_PATH=${FILE_PATH:-/app/tmp}
 export PORT=${PORT:-3000}
 export SUB_PATH=${SUB_PATH:-sub}
 
-# 创建临时目录
-mkdir -p $FILE_PATH
-chmod 777 $FILE_PATH
-
-# 设置权限（如果 start.sh 存在的话）
-if [ -f "/app/start.sh" ]; then
-    chmod +x /app/start.sh
+# 创建临时目录（如果不存在）
+if [ ! -d "$FILE_PATH" ]; then
+    mkdir -p $FILE_PATH
 fi
 
 # 如果有 .env.example 文件，复制为 .env（如果 .env 不存在）
