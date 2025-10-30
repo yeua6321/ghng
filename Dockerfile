@@ -52,8 +52,11 @@ RUN test -f /app/start.sh || (echo "start.sh not found, copying manually" && exi
     ls -la /app/start.sh && \
     echo "start.sh is ready"
 
+# 创建 supervisor 日志目录
+RUN mkdir -p /var/log/supervisor /var/run
+
 # 创建临时目录
-RUN mkdir -p /app/tmp && chmod 777 /app/tmp
+RUN mkdir -p /app/tmp
 
 # 复制 supervisor 配置
 COPY app/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -70,6 +73,7 @@ RUN chmod +x /app/entrypoint.sh
 
 # 更改文件所有权（但保持启动脚本的执行权限）
 RUN chown -R nodejs:nodejs /app && \
+    chown -R nodejs:nodejs /var/log/supervisor /var/run && \
     chmod +x /app/start.sh && \
     chmod +x /app/entrypoint.sh
 
