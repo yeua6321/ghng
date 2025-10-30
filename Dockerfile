@@ -58,8 +58,8 @@ RUN mkdir -p /app/logs /var/run
 # 创建临时目录
 RUN mkdir -p /app/tmp
 
-# 复制 supervisor 配置
-COPY app/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# 复制 supervisor 配置到主配置文件，确保 supervisord 读取到我们自定义的 pidfile 路径
+COPY app/supervisor/supervisord.conf /etc/supervisord.conf
 
 # 创建非 root 用户
 RUN addgroup -g 1001 -S nodejs && \
@@ -81,7 +81,9 @@ RUN if [ -f "/app/.env.example" ] && [ ! -f "/app/.env" ]; then \
 RUN chown -R nodejs:nodejs /app && \
     chown -R nodejs:nodejs /app/logs /var/run && \
     chmod +x /app/start.sh && \
-    chmod +x /app/entrypoint.sh
+    chmod +x /app/entrypoint.sh && \
+    # 预先创建 supervisord pid 文件并设置所有权，避免运行时权限问题
+    touch /app/supervisord.pid && chown nodejs:nodejs /app/supervisord.pid
 
 # 切换到非 root 用户
 USER nodejs
@@ -95,4 +97,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # 启动应用
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
