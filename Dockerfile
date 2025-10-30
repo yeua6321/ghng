@@ -71,6 +71,12 @@ COPY entrypoint.sh /app/entrypoint.sh
 # 设置启动脚本权限
 RUN chmod +x /app/entrypoint.sh
 
+# 创建 .env 文件（如果不存在）
+RUN if [ -f "/app/.env.example" ] && [ ! -f "/app/.env" ]; then \
+        cp /app/.env.example /app/.env && \
+        echo "Created .env file from .env.example during build"; \
+    fi
+
 # 更改文件所有权（但保持启动脚本的执行权限）
 RUN chown -R nodejs:nodejs /app && \
     chown -R nodejs:nodejs /var/log/supervisor /var/run && \

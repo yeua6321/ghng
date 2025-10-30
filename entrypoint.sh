@@ -18,9 +18,10 @@ if [ ! -d "$FILE_PATH" ]; then
 fi
 
 # 如果有 .env.example 文件，复制为 .env（如果 .env 不存在）
+# 注意：这个操作应该在 Dockerfile 中以 root 权限完成，这里只是检查
 if [ -f "/app/.env.example" ] && [ ! -f "/app/.env" ]; then
-    cp /app/.env.example /app/.env
-    echo "Created .env file from .env.example"
+    echo "Warning: .env file not found. Please ensure it was created during Docker build."
+    echo "You can manually copy .env.example to .env and customize it."
 fi
 
 # 显示启动信息
