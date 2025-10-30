@@ -61,8 +61,10 @@ COPY entrypoint.sh /app/entrypoint.sh
 # 设置启动脚本权限
 RUN chmod +x /app/entrypoint.sh
 
-# 更改文件所有权
-RUN chown -R nodejs:nodejs /app
+# 更改文件所有权（但保持启动脚本的执行权限）
+RUN chown -R nodejs:nodejs /app && \
+    chmod +x /app/start.sh && \
+    chmod +x /app/entrypoint.sh
 
 # 切换到非 root 用户
 USER nodejs
