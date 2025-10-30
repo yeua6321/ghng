@@ -6,7 +6,7 @@ WORKDIR /app
 COPY app/xy/package*.json ./
 
 # 安装依赖
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # 复制源代码
 COPY app/xy/ ./
