@@ -26,8 +26,7 @@ services:
       - ARGO_DOMAIN=
       - ARGO_AUTH=
       - NAME=
-    volumes:
-      - ./logs:/var/log/supervisor
+    # logs are sent to stdout/stderr; no file volume required
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
@@ -35,3 +34,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+volumes:
+  supervisor_logs:

@@ -52,8 +52,8 @@ RUN test -f /app/start.sh || (echo "start.sh not found, copying manually" && exi
     ls -la /app/start.sh && \
     echo "start.sh is ready"
 
-# 创建 supervisor 日志目录
-RUN mkdir -p /var/log/supervisor /var/run
+# 创建 supervisor 日志目录（使用应用内目录，避免宿主挂载权限冲突）
+RUN mkdir -p /app/logs /var/run
 
 # 创建临时目录
 RUN mkdir -p /app/tmp
@@ -79,7 +79,7 @@ RUN if [ -f "/app/.env.example" ] && [ ! -f "/app/.env" ]; then \
 
 # 更改文件所有权（但保持启动脚本的执行权限）
 RUN chown -R nodejs:nodejs /app && \
-    chown -R nodejs:nodejs /var/log/supervisor /var/run && \
+    chown -R nodejs:nodejs /app/logs /var/run && \
     chmod +x /app/start.sh && \
     chmod +x /app/entrypoint.sh
 
